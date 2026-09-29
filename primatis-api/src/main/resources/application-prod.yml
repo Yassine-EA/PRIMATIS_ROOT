@@ -1,0 +1,35 @@
+# Profil de production.
+#
+# Les paramètres propres à l'environnement de production sont fournis
+# exclusivement par des variables d'environnement. Aucune valeur locale
+# de développement n'est utilisée comme valeur de repli.
+
+spring:
+  datasource:
+    # Connexion à la base de données de production.
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+# La documentation OpenAPI et Swagger UI sont désactivées en production.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+primatis:
+  security:
+    cors:
+      # Origines autorisées pour l'application web.
+      allowed-origins: ${PRIMATIS_CORS_ALLOWED_ORIGINS}
+
+  article-media:
+    # Dossier de stockage des médias associés aux articles.
+    storage-path: ${PRIMATIS_ARTICLE_MEDIA_STORAGE_PATH}
+
+# Niveaux de journalisation utilisés en production.
+logging:
+  level:
+    root: INFO
+    be.primatis: INFO

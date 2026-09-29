@@ -1,0 +1,97 @@
+<div class="page-shell admin-settings-page">
+  <section class="admin-settings-hero" aria-labelledby="admin-settings-title">
+    <p class="admin-settings-kicker">ADMINISTRATION · CONFIGURATION</p>
+    <h1 id="admin-settings-title">Paramètres de l’application</h1>
+    <p>
+      Consultez les règles configurables de PRIMATIS et ajustez uniquement leur valeur lorsque cela est nécessaire.
+    </p>
+  </section>
+
+  @if (loading() && rows().length === 0 && !error()) {
+    <app-loading-state message="Chargement des paramètres…" />
+  } @else if (error(); as currentError) {
+    <app-error-state [message]="currentError.message" [showRetry]="true" (retry)="retry()" />
+  } @else if (rows().length === 0) {
+    <app-empty-state title="Aucun paramètre" message="Aucun paramètre applicatif n'est disponible." />
+  } @else {
+    <section class="settings-registry" aria-labelledby="settings-registry-title">
+      <header class="settings-registry-header">
+        <div>
+          <p class="settings-section-kicker">CONFIGURATION MÉTIER</p>
+          <h2 id="settings-registry-title">Règles applicatives</h2>
+          <p class="settings-registry-description">
+            Les clés et les types sont définis par l’application. Seule la valeur peut être modifiée.
+          </p>
+        </div>
+        <span class="settings-count">{{ rows().length }} paramètres</span>
+      </header>
+
+      <div class="settings-table-container">
+        <p-table [value]="rows()" [paginator]="false">
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col" class="settings-key-column">Paramètre</th>
+              <th scope="col" class="settings-value-column">Valeur actuelle</th>
+              <th scope="col" class="settings-type-column">Type</th>
+              <th scope="col">Description</th>
+              <th scope="col" class="settings-audit-column">Dernière modification</th>
+              @if (canManageSettings) {
+                <th scope="col" class="settings-action-column">Action</th>
+              }
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-setting>
+            <tr>
+              <td class="settings-key-cell" data-label="Paramètre">
+                <span class="settings-mobile-label">Paramètre</span>
+                <!-- Balisage volontairement compact : tout espace dans le @for s'afficherait dans la clé ("FINE_ WEEKLY_ RATE"). -->
+                <code class="settings-key">@for (segment of keySegments(setting.settingKey); track $index; let last = $last) {{{ segment }}{{ last ? '' : '_' }}<wbr />}</code>
+              </td>
+
+              <td class="settings-value-cell" data-label="Valeur actuelle">
+                <span class="settings-mobile-label">Valeur actuelle</span>
+                <strong>{{ setting.settingValue }}</strong>
+              </td>
+
+              <td class="settings-type-cell" data-label="Type">
+                <span class="settings-mobile-label">Type</span>
+                <span class="settings-type-badge">{{ valueTypeLabel(setting) }}</span>
+              </td>
+
+              <td class="settings-description-cell" data-label="Description">
+                <span class="settings-mobile-label">Description</span>
+                <span>{{ setting.description }}</span>
+              </td>
+
+              <td class="settings-audit-cell" data-label="Dernière modification">
+                <span class="settings-mobile-label">Dernière modification</span>
+                <span>{{ auditLabel(setting) }}</span>
+              </td>
+
+              @if (canManageSettings) {
+                <td class="settings-action-cell" data-label="Action">
+                  <button
+                    type="button"
+                    pButton
+                    severity="secondary"
+                    label="Modifier"
+                    [attr.aria-label]="'Modifier ' + setting.settingKey"
+                    (click)="edit(setting)"
+                  ></button>
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </section>
+  }
+
+  <app-setting-value-edit-dialog
+    [visible]="editingSetting() !== null"
+    [setting]="editingSetting()"
+    (closed)="closeDialog()"
+    (saved)="onSaved($event)"
+  />
+</div>

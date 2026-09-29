@@ -1,0 +1,50 @@
+# Profil local de démonstration utilisé pour le package jury.
+#
+# La configuration de la base de données et des ressources sensibles est
+# fournie exclusivement par l'environnement. Une variable obligatoire absente
+# empêche le démarrage de l'application.
+#
+# Ce profil hérite des paramètres communs définis dans application.yml,
+# notamment Flyway, la validation du schéma Hibernate, la configuration JWT
+# et les traitements planifiés.
+#
+# Variables obligatoires :
+# - SPRING_DATASOURCE_URL
+# - SPRING_DATASOURCE_USERNAME
+# - SPRING_DATASOURCE_PASSWORD
+# - PRIMATIS_JWT_PRIVATE_KEY_PATH
+# - PRIMATIS_JWT_PUBLIC_KEY_PATH
+# - PRIMATIS_CORS_ALLOWED_ORIGINS
+# - PRIMATIS_ARTICLE_MEDIA_STORAGE_PATH
+#
+# Variable optionnelle :
+# - SERVER_PORT
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+# Documentation OpenAPI disponible pour la consultation technique.
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+primatis:
+  security:
+    cors:
+      # Origines autorisées pour l'application web.
+      allowed-origins: ${PRIMATIS_CORS_ALLOWED_ORIGINS}
+
+  article-media:
+    # Dossier de stockage des médias associés aux articles.
+    storage-path: ${PRIMATIS_ARTICLE_MEDIA_STORAGE_PATH}
+
+# Niveaux de journalisation utilisés pour la démonstration.
+logging:
+  level:
+    root: INFO
+    be.primatis: INFO

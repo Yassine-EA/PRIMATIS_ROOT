@@ -1,0 +1,36 @@
+import { Translation } from 'primeng/api';
+
+
+export const PRIMENG_FR_TRANSLATION: Translation = {
+  firstDayOfWeek: 1,
+  dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+  dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+  dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+  monthNames: [
+    'janvier',
+    'février',
+    'mars',
+    'avril',
+    'mai',
+    'juin',
+    'juillet',
+    'août',
+    'septembre',
+    'octobre',
+    'novembre',
+    'décembre',
+  ],
+  monthNamesShort: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+  dateFormat: 'dd/mm/yy',
+  today: 'Aujourd’hui',
+  weekHeader: 'Sem.',
+  chooseYear: 'Choisir une année',
+  chooseMonth: 'Choisir un mois',
+  chooseDate: 'Choisir une date',
+  prevDecade: 'Décennie précédente',
+  nextDecade: 'Décennie suivante',
+  prevYear: 'Année précédente',
+  nextYear: 'Année suivante',
+  prevMonth: 'Mois précédent',
+  nextMonth: 'Mois suivant',
+};

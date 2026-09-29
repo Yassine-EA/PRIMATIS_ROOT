@@ -1,0 +1,70 @@
+<p-dialog
+  [visible]="visible()"
+  [modal]="true"
+  header="Modifier le paramètre"
+  [closable]="!submitting()"
+  [style]="{ width: 'min(34rem, calc(100vw - 2rem))' }"
+  (onHide)="cancel()"
+>
+  @if (setting(); as current) {
+    <form class="setting-edit-form" [formGroup]="form" (ngSubmit)="submit()">
+      @if (errorMessage(); as message) {
+        <p-message severity="error" [text]="message" styleClass="form-banner-error" />
+      }
+
+      <div class="setting-context">
+        <div class="setting-context-row">
+          <span class="setting-context-label">Clé</span>
+          <code>{{ current.settingKey }}</code>
+        </div>
+
+        <div class="setting-context-row">
+          <span class="setting-context-label">Type</span>
+          <span class="setting-context-type">{{ current.valueType }}</span>
+        </div>
+
+        <div class="setting-context-description">
+          <span class="setting-context-label">Description</span>
+          <p>{{ current.description }}</p>
+        </div>
+      </div>
+
+      <div class="form-field setting-value-field">
+        <label for="setting-value">Nouvelle valeur</label>
+        <input pInputText id="setting-value" formControlName="settingValue" />
+        <small>La clé et le type du paramètre restent inchangés.</small>
+
+        @if (form.controls.settingValue.invalid && form.controls.settingValue.touched) {
+          @if (form.controls.settingValue.hasError('required')) {
+            <p-message severity="error" text="La valeur est requise." />
+          }
+          @if (form.controls.settingValue.hasError('notInteger')) {
+            <p-message severity="error" text="La valeur doit être un nombre entier." />
+          }
+          @if (form.controls.settingValue.hasError('notDecimal')) {
+            <p-message severity="error" text="La valeur doit être un nombre décimal." />
+          }
+          @if (form.controls.settingValue.hasError('notPositive')) {
+            <p-message severity="error" text="La valeur doit être strictement positive." />
+          }
+        }
+
+        @if (fieldError('settingValue'); as message) {
+          <p-message severity="error" [text]="message" />
+        }
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          pButton
+          label="Annuler"
+          severity="secondary"
+          [disabled]="submitting()"
+          (click)="cancel()"
+        ></button>
+        <button type="submit" pButton label="Enregistrer" [disabled]="submitting()"></button>
+      </div>
+    </form>
+  }
+</p-dialog>

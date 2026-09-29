@@ -1,0 +1,275 @@
+<div class="page-shell staff-loans-page staff-fines-page">
+  <header class="page-header staff-loans-hero staff-fines-hero">
+    <div class="staff-loans-hero-copy">
+      <span class="staff-page-kicker">Suivi financier</span>
+      <h1 class="page-title">Gestion des amendes</h1>
+      <p class="page-description">
+        Consultez les montants dus par les membres, confirmez les règlements reçus et clôturez les
+        dossiers concernés.
+      </p>
+    </div>
+  </header>
+
+  <form class="staff-catalogue-filters staff-fines-filters" [formGroup]="filtersForm" aria-label="Recherche et filtres des amendes">
+    <div class="staff-catalogue-filters-heading">
+      <div>
+        <span class="staff-page-kicker">Recherche</span>
+        <h2>Retrouver une amende</h2>
+      </div>
+      <span class="staff-catalogue-filter-hint">Membre, n° adhérent, titre, statut ou dates</span>
+    </div>
+
+    <div class="staff-catalogue-filter-grid staff-loans-filter-grid">
+      <div class="catalogue-filter-field staff-loans-search-field">
+        <label for="staff-fines-search">Rechercher une amende</label>
+        <span class="staff-catalogue-input-icon">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input
+            pInputText
+            id="staff-fines-search"
+            type="search"
+            formControlName="q"
+            autocomplete="off"
+            placeholder="Rechercher par membre, n° adhérent ou titre…"
+          />
+        </span>
+      </div>
+
+      <div class="catalogue-filter-field staff-loans-status-field">
+        <label for="staff-fines-status">Statut</label>
+        <p-select
+          inputId="staff-fines-status"
+          appendTo="body"
+          formControlName="fineStatus"
+          [options]="fineStatusOptions"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </div>
+
+      <fieldset
+        class="staff-loans-date-group"
+        [attr.aria-describedby]="filtersForm.hasError('issuedDateRange') ? 'staff-fines-issued-range-error' : null"
+      >
+        <legend>Date d’émission</legend>
+        <div class="catalogue-filter-field">
+          <label for="staff-fines-issued-from">Du</label>
+          <p-datepicker
+            inputId="staff-fines-issued-from"
+            formControlName="issuedDateFrom"
+            dateFormat="dd/mm/yy"
+            placeholder="jj/mm/aaaa"
+            appendTo="body"
+            [showIcon]="true"
+            iconDisplay="input"
+            [showClear]="true"
+            [invalid]="filtersForm.hasError('issuedDateRange')"
+          />
+        </div>
+        <div class="catalogue-filter-field">
+          <label for="staff-fines-issued-to">Au</label>
+          <p-datepicker
+            inputId="staff-fines-issued-to"
+            formControlName="issuedDateTo"
+            dateFormat="dd/mm/yy"
+            placeholder="jj/mm/aaaa"
+            appendTo="body"
+            [showIcon]="true"
+            iconDisplay="input"
+            [showClear]="true"
+            [invalid]="filtersForm.hasError('issuedDateRange')"
+          />
+        </div>
+        @if (filtersForm.hasError('issuedDateRange')) {
+          <p id="staff-fines-issued-range-error" class="staff-loans-range-error" role="alert">
+            La date de début doit précéder la date de fin.
+          </p>
+        }
+      </fieldset>
+
+      <fieldset
+        class="staff-loans-date-group"
+        [attr.aria-describedby]="filtersForm.hasError('closedDateRange') ? 'staff-fines-closed-range-error' : null"
+      >
+        <legend>Date de clôture</legend>
+        <div class="catalogue-filter-field">
+          <label for="staff-fines-closed-from">Du</label>
+          <p-datepicker
+            inputId="staff-fines-closed-from"
+            formControlName="closedDateFrom"
+            dateFormat="dd/mm/yy"
+            placeholder="jj/mm/aaaa"
+            appendTo="body"
+            [showIcon]="true"
+            iconDisplay="input"
+            [showClear]="true"
+            [invalid]="filtersForm.hasError('closedDateRange')"
+          />
+        </div>
+        <div class="catalogue-filter-field">
+          <label for="staff-fines-closed-to">Au</label>
+          <p-datepicker
+            inputId="staff-fines-closed-to"
+            formControlName="closedDateTo"
+            dateFormat="dd/mm/yy"
+            placeholder="jj/mm/aaaa"
+            appendTo="body"
+            [showIcon]="true"
+            iconDisplay="input"
+            [showClear]="true"
+            [invalid]="filtersForm.hasError('closedDateRange')"
+          />
+        </div>
+        @if (filtersForm.hasError('closedDateRange')) {
+          <p id="staff-fines-closed-range-error" class="staff-loans-range-error" role="alert">
+            La date de début doit précéder la date de fin.
+          </p>
+        }
+      </fieldset>
+
+      <div class="staff-loans-filter-actions">
+        @if (hasActiveFilters()) {
+          <p-button
+            type="button"
+            severity="secondary"
+            [outlined]="true"
+            icon="pi pi-filter-slash"
+            label="Effacer"
+            ariaLabel="Effacer la recherche et les filtres"
+            (onClick)="clearFilters()"
+          />
+        }
+      </div>
+    </div>
+  </form>
+
+  <section
+    class="staff-loans-register staff-fines-register"
+    aria-labelledby="staff-fines-register-title"
+  >
+    <div class="staff-loans-register-heading">
+      <div>
+        <span class="staff-page-kicker">Registre</span>
+        <h2 id="staff-fines-register-title">Amendes enregistrées</h2>
+      </div>
+      @if (!loading() && !error()) {
+        <span class="staff-loans-count">
+          {{ totalRecords() }} amende{{ totalRecords() === 1 ? '' : 's' }}
+        </span>
+      }
+    </div>
+
+    @if (loading() && rows().length === 0 && !error()) {
+      <div class="staff-loans-feedback">
+        <app-loading-state message="Chargement des amendes…" />
+      </div>
+    } @else if (error(); as currentError) {
+      <div class="staff-loans-feedback">
+        <app-error-state [message]="currentError.message" [showRetry]="true" (retry)="retry()" />
+      </div>
+    } @else if (rows().length === 0) {
+      <div class="staff-loans-empty staff-fines-empty">
+        <img src="/assets/fallbacks/empty-states/fines.svg" alt="" width="210" height="140" />
+        <app-empty-state
+          [title]="filtersApplied() ? 'Aucun résultat' : 'Aucune amende'"
+          [message]="
+            filtersApplied()
+              ? 'Aucune amende ne correspond à votre recherche.'
+              : 'Aucune amende ne correspond à cette page.'
+          "
+        />
+      </div>
+    } @else {
+      <div class="staff-table-container staff-fines-table">
+        <p-table
+          [value]="rows()"
+          [lazy]="true"
+          [lazyLoadOnInit]="false"
+          [paginator]="true"
+          [rows]="20"
+          [first]="first()"
+          [totalRecords]="totalRecords()"
+          [loading]="loading()"
+          (onLazyLoad)="onLazyLoad($event)"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col">Membre</th>
+              <th scope="col">N° adhérent</th>
+              <th scope="col">Montant</th>
+              <th scope="col">Statut</th>
+              <th scope="col">Date d'émission</th>
+              <th scope="col" class="staff-col-muted">Motif</th>
+              <th scope="col" class="staff-col-muted">Exemplaire</th>
+              <th scope="col" class="staff-col-muted">Clôturée le</th>
+              @if (canManageFines) {
+                <th scope="col">Actions</th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-fine>
+            <tr [class.staff-fine-row-alert]="fine.fineStatus === 'UNPAID'">
+              <td data-label="Membre">
+                <strong class="staff-fine-member"
+                  >{{ fine.borrower.firstName }} {{ fine.borrower.lastName }}</strong
+                >
+              </td>
+              <td data-label="N° adhérent">{{ fine.borrower.memberNumber }}</td>
+              <td data-label="Montant" [class.staff-fine-unpaid]="fine.fineStatus === 'UNPAID'">
+                <strong>{{ fine.amount | currency: 'EUR' }}</strong>
+              </td>
+              <td data-label="Statut">
+                <p-tag
+                  [value]="fineStatusLabel(fine.fineStatus)"
+                  [severity]="fineStatusSeverity(fine.fineStatus)"
+                />
+              </td>
+              <td data-label="Date d'émission">{{ formatDateTime(fine.issuedAt) }}</td>
+              <td data-label="Motif" class="staff-col-muted">{{ fine.reason }}</td>
+              <td data-label="Exemplaire" class="staff-col-muted">
+                <span class="staff-inventory-code">{{ fine.loan.copy.inventoryCode }}</span>
+              </td>
+              <td data-label="Clôturée le" class="staff-col-muted">
+                {{ formatDateTime(fine.paidAt ?? fine.cancelledAt) }}
+              </td>
+              @if (canManageFines) {
+                <td data-label="Actions" class="staff-fine-actions">
+                  @if (isActionable(fine)) {
+                    <button
+                      type="button"
+                      pButton
+                      severity="secondary"
+                      label="Confirmer paiement"
+                      [disabled]="isBusy(fine)"
+                      [attr.aria-label]="
+                        'Confirmer le paiement de l\'amende de ' +
+                        fine.borrower.firstName +
+                        ' ' +
+                        fine.borrower.lastName
+                      "
+                      (click)="confirmPaymentPrompt(fine)"
+                    ></button>
+                    <button
+                      type="button"
+                      pButton
+                      severity="secondary"
+                      label="Annuler"
+                      [disabled]="isBusy(fine)"
+                      [attr.aria-label]="
+                        'Annuler l\'amende de ' +
+                        fine.borrower.firstName +
+                        ' ' +
+                        fine.borrower.lastName
+                      "
+                      (click)="confirmCancelPrompt(fine)"
+                    ></button>
+                  }
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    }
+  </section>
+</div>

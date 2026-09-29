@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.admin-users-page {
+  --admin-users-accent: var(--primatis-copper-600);
+}
+
+.admin-users-hero {
+  min-height: 14rem;
+}
+
+.admin-users-create-button.p-button {
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.admin-users-register {
+  min-height: 31rem;
+}
+
+@media (max-width: 767px) {
+  .admin-users-hero {
+    align-items: stretch;
+    min-height: auto;
+  }
+
+  .admin-users-create-button.p-button {
+    width: 100%;
+    margin: 1.2rem 0 0;
+  }
+
+  .admin-users-register-heading {
+    align-items: flex-start;
+  }
+}

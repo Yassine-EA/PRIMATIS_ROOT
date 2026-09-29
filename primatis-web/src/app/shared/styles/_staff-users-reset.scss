@@ -1,0 +1,441 @@
+.staff-users-page {
+  gap: 1.15rem;
+}
+
+.staff-users-hero {
+  min-height: 10.75rem;
+  padding-block: clamp(1.35rem, 2.8vw, 2.15rem);
+}
+
+.staff-users-hero .staff-loans-hero-copy {
+  max-width: 44rem;
+}
+
+.staff-users-hero .page-title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+}
+
+.staff-users-hero .page-description {
+  max-width: 42rem;
+  font-size: clamp(0.92rem, 1.25vw, 1.02rem);
+}
+
+.staff-users-register {
+  min-height: 30rem;
+}
+
+.staff-users-register .staff-loans-register-heading {
+  padding-block: 1rem;
+}
+
+.staff-users-register .staff-loans-register-heading h2 {
+  font-size: clamp(1.35rem, 2vw, 1.65rem);
+}
+
+.staff-users-register .staff-loans-count {
+  min-height: auto;
+  padding: 0.3rem 0;
+  color: var(--primatis-gray-600);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.staff-users-empty img {
+  width: min(11rem, 46vw);
+  margin-bottom: -0.25rem;
+}
+
+.staff-users-table .p-datatable-table {
+  min-width: 64rem;
+}
+
+.staff-users-table .p-datatable-thead > tr > th {
+  padding-block: 0.72rem;
+  font-size: 0.68rem;
+}
+
+.staff-users-table .p-datatable-tbody > tr > td {
+  padding-block: 0.72rem;
+  vertical-align: middle;
+}
+
+.staff-user-identity {
+  display: flex;
+  min-width: 12rem;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.staff-user-avatar {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  place-items: center;
+  color: var(--primatis-copper-text);
+  background: var(--primatis-ivory-50);
+  border: 1px solid var(--primatis-ivory-200);
+  border-radius: 50%;
+}
+
+.staff-user-avatar i {
+  font-size: 0.78rem;
+}
+
+.staff-user-identity strong {
+  color: var(--primatis-navy-900);
+  font-size: 0.9rem;
+  font-weight: 760;
+  line-height: 1.25;
+}
+
+.staff-user-member-number {
+  color: var(--primatis-gray-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem !important;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.staff-user-no-membership {
+  color: var(--primatis-gray-500);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.staff-user-email {
+  max-width: 18rem;
+  overflow: hidden;
+  color: var(--primatis-gray-600) !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staff-users-table .p-tag {
+  padding: 0.18rem 0.42rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.staff-user-action a {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  padding: 0.3rem 0.15rem;
+  color: var(--primatis-copper-text);
+  border: 0;
+  border-radius: 0;
+  font-size: 0.78rem;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.staff-user-action a i {
+  font-size: 0.72rem;
+  transition: transform 160ms ease;
+}
+
+.staff-user-action a:hover {
+  color: var(--primatis-navy-900);
+  background: transparent;
+}
+
+.staff-user-action a:hover i {
+  transform: translateX(2px);
+}
+
+.staff-user-action a:focus-visible {
+  outline: 3px solid rgba(184, 115, 51, 0.28);
+  outline-offset: 3px;
+}
+
+/* Tablette : vraie grille de cartes, deux comptes par ligne. */
+@media (max-width: 1199px) {
+  .staff-users-page {
+    gap: 1rem;
+  }
+
+  .staff-users-hero {
+    min-height: 9.5rem;
+    padding: 1.35rem 1.5rem;
+  }
+
+  .staff-users-table {
+    overflow: visible;
+    padding: 1rem;
+  }
+
+  .staff-users-table .p-datatable-table {
+    min-width: 0;
+  }
+
+  .staff-users-table .p-datatable-thead {
+    display: none;
+  }
+
+  .staff-users-table .p-datatable-tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .staff-users-table .p-datatable-tbody > tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'identity identity'
+      'member member'
+      'account membership'
+      'email email'
+      'action action';
+    min-width: 0;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--primatis-ivory-200);
+    border-radius: var(--primatis-radius-sm);
+    box-shadow: 0 5px 16px rgba(8, 43, 64, 0.055);
+  }
+
+  .staff-users-table .p-datatable-tbody > tr > td {
+    display: flex;
+    width: auto;
+    min-width: 0;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.48rem 0.75rem;
+    border: 0;
+    text-align: left;
+  }
+
+  .staff-users-table .p-datatable-tbody > tr > td::before {
+    flex: 0 0 auto;
+    color: var(--primatis-gray-500);
+    content: attr(data-label);
+    font-size: 0.61rem;
+    font-weight: 800;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  .staff-users-table .staff-user-identity {
+    grid-area: identity;
+    padding: 0.78rem 0.75rem 0.62rem;
+    border-bottom: 1px solid var(--primatis-ivory-100);
+  }
+
+  .staff-users-table .staff-user-identity::before,
+  .staff-users-table .staff-user-action::before {
+    display: none;
+  }
+
+  .staff-user-member-number {
+    grid-area: member;
+    padding-top: 0.38rem !important;
+    color: var(--primatis-gray-500);
+  }
+
+  .staff-user-account-status {
+    grid-area: account;
+  }
+
+  .staff-user-membership-status {
+    grid-area: membership;
+  }
+
+  .staff-user-email {
+    grid-area: email;
+    max-width: none;
+    padding-bottom: 0.65rem !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .staff-users-table .staff-user-action {
+    grid-area: action;
+    justify-content: flex-end;
+    padding: 0.55rem 0.75rem;
+    background: var(--primatis-ivory-50);
+    border-top: 1px solid var(--primatis-ivory-100);
+  }
+
+  .staff-user-action a {
+    min-height: 1.9rem;
+  }
+
+  .staff-users-table .p-paginator {
+    margin-top: 1rem;
+    border-top: 1px solid var(--primatis-ivory-200);
+  }
+}
+
+/* Mobile : carte synthétique, une seule colonne et minimum de labels. */
+@media (max-width: 767px) {
+  .staff-users-page {
+    gap: 0.85rem;
+  }
+
+  .staff-users-hero {
+    min-height: 8.75rem;
+    padding: 1.15rem;
+  }
+
+  .staff-users-hero .page-title {
+    font-size: clamp(1.75rem, 8vw, 2.2rem);
+  }
+
+  .staff-users-hero .page-description {
+    margin-top: 0.45rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .staff-users-register .staff-loans-register-heading {
+    align-items: flex-end;
+    padding: 0.9rem 1rem;
+  }
+
+  .staff-users-register .staff-loans-register-heading h2 {
+    font-size: 1.3rem;
+  }
+
+  .staff-users-register .staff-loans-count {
+    font-size: 0.72rem;
+  }
+
+  .staff-users-table {
+    padding: 0.7rem;
+  }
+
+  .staff-users-table .p-datatable-tbody {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .staff-users-table .p-datatable-tbody > tr {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'identity identity'
+      'member member'
+      'account membership'
+      'email email'
+      'action action';
+  }
+
+  .staff-users-table .staff-user-identity {
+    padding: 0.7rem 0.72rem 0.55rem;
+  }
+
+  .staff-user-avatar {
+    width: 1.85rem;
+    height: 1.85rem;
+    flex-basis: 1.85rem;
+  }
+
+  .staff-user-identity strong {
+    font-size: 0.86rem;
+  }
+
+  .staff-user-member-number {
+    padding: 0.25rem 0.72rem 0.1rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .staff-users-table .staff-user-member-number::before {
+    font-size: 0.58rem;
+  }
+
+  .staff-user-account-status,
+  .staff-user-membership-status {
+    padding-block: 0.35rem !important;
+  }
+
+  .staff-user-account-status::before,
+  .staff-user-membership-status::before {
+    display: none;
+  }
+
+  .staff-user-account-status {
+    justify-content: flex-start;
+    padding-left: 0.72rem !important;
+  }
+
+  .staff-user-membership-status {
+    justify-content: flex-end;
+    padding-right: 0.72rem !important;
+  }
+
+  .staff-user-email {
+    display: block !important;
+    padding: 0.45rem 0.72rem 0.62rem !important;
+    font-size: 0.76rem !important;
+    text-align: left !important;
+  }
+
+  .staff-user-email::before {
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .staff-users-table .staff-user-action {
+    padding: 0.45rem 0.72rem;
+  }
+
+  .staff-user-action a {
+    min-height: 2.15rem;
+    font-size: 0.76rem;
+  }
+
+  .staff-users-table .p-paginator {
+    margin-top: 0.75rem;
+    padding-block: 0.45rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .staff-users-hero {
+    padding-inline: 1rem;
+  }
+
+  .staff-users-table {
+    padding-inline: 0.55rem;
+  }
+
+  .staff-user-email {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+}
+
+
+.staff-users-filter-grid {
+  grid-template-columns: minmax(16rem, 2fr) minmax(11rem, 1fr) minmax(11rem, 1fr) auto;
+}
+
+.staff-users-filter-actions {
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+@media (max-width: 1023px) {
+  .staff-users-filter-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .staff-users-filter-actions {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .staff-users-filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

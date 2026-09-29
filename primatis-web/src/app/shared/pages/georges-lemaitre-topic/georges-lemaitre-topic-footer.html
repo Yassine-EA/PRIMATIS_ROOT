@@ -1,0 +1,16 @@
+<section class="lemaitre-topic-sources" aria-labelledby="topic-sources-heading">
+  <div class="lemaitre-topic-sources-heading"><p class="lemaitre-topic-eyebrow">Pour approfondir</p><h2 id="topic-sources-heading">Sources</h2><p>Références utilisées pour contextualiser ce dossier.</p></div>
+  <ul>@for (source of sources(); track source.url) { <li><a [href]="source.url" target="_blank" rel="noopener noreferrer"><span>{{ source.label }}</span><i class="pi pi-external-link" aria-hidden="true"></i></a></li> }</ul>
+</section>
+
+<section class="lemaitre-topic-explore" aria-labelledby="explore-heading">
+  <div class="lemaitre-topic-explore-heading"><p class="lemaitre-topic-eyebrow">Continuer l'exploration</p><h2 id="explore-heading">Autres dossiers Georges Lemaître</h2></div>
+  <nav class="lemaitre-topic-next" aria-label="Autres dossiers Georges Lemaître">
+    @if (topicKey() !== 'parcours') { <a routerLink="/georges-lemaitre/parcours"><span>1894–1966</span><strong>Parcours</strong><small>Vie, études et carrière</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+    @if (topicKey() !== 'univers-en-expansion') { <a routerLink="/georges-lemaitre/univers-en-expansion"><span>1927</span><strong>Univers en expansion</strong><small>Cosmologie relativiste</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+    @if (topicKey() !== 'atome-primitif') { <a routerLink="/georges-lemaitre/atome-primitif"><span>1931</span><strong>Atome primitif</strong><small>Aux origines du cosmos</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+    @if (topicKey() !== 'charleroi') { <a routerLink="/georges-lemaitre/charleroi"><span>1894</span><strong>Charleroi</strong><small>Une figure locale</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+    @if (topicKey() !== 'pourquoi-primatis') { <a routerLink="/georges-lemaitre/pourquoi-primatis"><span>Transmission</span><strong>Pourquoi PRIMATIS ?</strong><small>Science, culture et savoir</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+    @if (topicKey() !== 'distinctions') { <a routerLink="/georges-lemaitre/distinctions"><span>1934–1966</span><strong>Distinctions</strong><small>Prix et reconnaissance</small><i class="pi pi-arrow-right" aria-hidden="true"></i></a> }
+  </nav>
+</section>

@@ -1,0 +1,320 @@
+<section class="catalogue-v3-hero">
+  <picture class="catalogue-v3-hero-background" aria-hidden="true">
+    <source
+      media="(max-width: 767px)"
+      srcset="/assets/public/catalogue/hero/catalogue-hero-768-mobile.webp"
+    />
+    <source
+      media="(max-width: 1279px)"
+      srcset="/assets/public/catalogue/hero/catalogue-hero-1280.webp"
+    />
+    <img src="/assets/public/catalogue/hero/catalogue-hero-1920.webp" alt="" />
+  </picture>
+
+  <div class="catalogue-v3-hero-inner">
+    <div class="catalogue-v3-hero-copy">
+      <h1>Catalogue</h1>
+      <p>Des livres pour comprendre le monde<br />et imaginer demain.</p>
+    </div>
+  </div>
+</section>
+
+<section class="catalogue-v3-search-section" aria-label="Recherche dans le catalogue">
+  <form class="catalogue-v3-search-form" [formGroup]="filtersForm" (ngSubmit)="onSubmit()">
+    <div class="catalogue-v3-search-field">
+      <label class="visually-hidden" for="catalogue-search">Rechercher par titre ou auteur</label>
+      <img src="/assets/icons/editorial/search.svg" alt="" aria-hidden="true" />
+      <input
+        pInputText
+        id="catalogue-search"
+        type="search"
+        formControlName="q"
+        placeholder="Rechercher par titre ou auteur…"
+        aria-describedby="catalogue-search-hint"
+      />
+      @if (searchTerm().length > 0) {
+        <button
+          type="button"
+          class="catalogue-search-clear catalogue-v3-search-clear"
+          aria-label="Effacer la recherche"
+          (click)="clearSearch()"
+        >
+          <i class="pi pi-times" aria-hidden="true"></i>
+        </button>
+      }
+    </div>
+
+    <button type="submit" class="catalogue-v3-search-submit">
+      <span>Rechercher</span>
+      <img src="/assets/icons/editorial/search.svg" alt="" aria-hidden="true" />
+    </button>
+
+    <p id="catalogue-search-hint" class="catalogue-v3-search-hint">
+      La recherche porte sur le titre et l'auteur des ouvrages.
+    </p>
+
+    @if (loading() && rows().length > 0) {
+      <span class="catalogue-v3-search-pending" aria-live="polite">Recherche en cours…</span>
+    }
+  </form>
+</section>
+
+<section class="catalogue-v3-results-section">
+  <div class="catalogue-v3-layout">
+    <aside
+      id="catalogue-filters"
+      class="catalogue-v3-filters"
+      aria-labelledby="catalogue-filters-heading"
+    >
+      <div class="catalogue-v3-filters-header">
+        <h2 id="catalogue-filters-heading">Filtres</h2>
+        @if (hasActiveFilters()) {
+          <button type="button" class="catalogue-filters-reset" (click)="resetFilters()">
+            Réinitialiser
+          </button>
+        }
+      </div>
+
+      <div class="catalogue-v3-filter-groups">
+        <div class="catalogue-v3-filter-group">
+          <label for="catalogue-language">Langue</label>
+          <p-select
+            class="catalogue-v3-language-select"
+            inputId="catalogue-language"
+            [formControl]="filtersForm.controls.language"
+            [options]="languageOptions"
+            optionLabel="label"
+            optionValue="value"
+            [style]="{ width: '100%' }"
+          />
+        </div>
+
+        <div class="catalogue-v3-filter-group">
+          <label for="catalogue-genre">Genre</label>
+          <p-select
+            class="catalogue-v3-genre-select"
+            inputId="catalogue-genre"
+            [formControl]="filtersForm.controls.genreCode"
+            [options]="genreOptions()"
+            optionLabel="label"
+            optionValue="value"
+            [style]="{ width: '100%' }"
+          />
+        </div>
+      </div>
+
+      <p class="catalogue-v3-filter-hint">Les résultats sont actualisés automatiquement.</p>
+
+      <div class="catalogue-v3-filter-note">
+        <img src="/assets/icons/editorial/info-circle.svg" alt="" aria-hidden="true" />
+        <p>
+          Le catalogue public présente les notices bibliographiques. Pour toute question sur un
+          exemplaire, contactez la bibliothèque.
+        </p>
+      </div>
+    </aside>
+
+    <div class="catalogue-v3-results">
+      @if (loading() && rows().length === 0 && !error()) {
+        <app-loading-state message="Chargement du catalogue…" />
+      } @else if (error(); as currentError) {
+        <app-error-state [message]="currentError.message" [showRetry]="true" (retry)="retry()" />
+      } @else if (rows().length === 0) {
+        <app-empty-state
+          title="Aucun ouvrage trouvé"
+          message="Essayez de modifier votre recherche ou vos filtres."
+        />
+      } @else {
+        <div class="catalogue-v3-results-toolbar">
+          <p class="catalogue-v3-result-count" aria-live="polite">
+            {{ totalRecords() }} résultat{{ totalRecords() > 1 ? 's' : '' }}
+          </p>
+          <div class="catalogue-v3-toolbar-controls">
+            <div
+              class="catalogue-v3-view-toggle"
+              role="group"
+              aria-label="Mode d'affichage des résultats"
+            >
+              <button
+                type="button"
+                class="catalogue-v3-view-toggle-btn"
+                [class.is-active]="viewMode() === 'grid'"
+                [attr.aria-pressed]="viewMode() === 'grid'"
+                (click)="setViewMode('grid')"
+              >
+                <i class="pi pi-th-large" aria-hidden="true"></i>
+                Cartes
+              </button>
+              <button
+                type="button"
+                class="catalogue-v3-view-toggle-btn"
+                [class.is-active]="viewMode() === 'list'"
+                [attr.aria-pressed]="viewMode() === 'list'"
+                (click)="setViewMode('list')"
+              >
+                <i class="pi pi-list" aria-hidden="true"></i>
+                Liste
+              </button>
+            </div>
+
+            <div class="catalogue-v3-page-size">
+              <label class="visually-hidden" for="catalogue-page-size">Résultats par page</label>
+              <p-select
+                class="catalogue-v3-page-size-select"
+                inputId="catalogue-page-size"
+                [formControl]="pageSizeControl"
+                [options]="pageSizeOptions"
+                optionLabel="label"
+                optionValue="value"
+              />
+            </div>
+          </div>
+        </div>
+
+        @if (viewMode() === 'grid') {
+          <ul class="catalogue-v3-grid">
+            @for (row of rows(); track row.id) {
+              <li>
+                <a
+                  class="catalogue-v3-card"
+                  [routerLink]="['/catalogue', row.id]"
+                  [attr.aria-label]="rowLabel(row)"
+                >
+                  <span class="catalogue-card-cover catalogue-v3-card-cover">
+                    @if (row.coverImageUrl) {
+                      <img [src]="row.coverImageUrl" [alt]="'Couverture de ' + row.title" />
+                    } @else {
+                      <span
+                        class="cover-fallback catalogue-v3-cover-fallback"
+                        aria-hidden="true"
+                      ></span>
+                    }
+                  </span>
+
+                  <span class="catalogue-v3-card-body">
+                    <span class="catalogue-v3-card-title" [attr.title]="row.title">{{
+                      row.title
+                    }}</span>
+
+                    @if (authorsLabel(row); as authors) {
+                      <span
+                        class="catalogue-v3-authors"
+                        [attr.title]="row.authorNames.join(', ')"
+                        >{{ authors }}</span
+                      >
+                    }
+
+                    <span class="catalogue-v3-card-meta">
+                      <span class="catalogue-v3-language">{{ languageLabel(row.language) }}</span>
+                      @if (row.publicationYear) {
+                        <span>{{ row.publicationYear }}</span>
+                      }
+                    </span>
+
+                    <span
+                      class="catalogue-v3-availability"
+                      [class.catalogue-v3-availability-yes]="row.availableCopies > 0"
+                    >
+                      <i
+                        class="pi"
+                        [class.pi-check-circle]="row.availableCopies > 0"
+                        [class.pi-minus-circle]="row.availableCopies === 0"
+                        aria-hidden="true"
+                      ></i>
+                      {{ availabilityLabel(row) }}
+                    </span>
+
+                    <span class="catalogue-v3-card-link">
+                      Voir la fiche
+                      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+                    </span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <ul class="catalogue-v3-list">
+            @for (row of rows(); track row.id) {
+              <li>
+                <a
+                  class="catalogue-v3-row"
+                  [routerLink]="['/catalogue', row.id]"
+                  [attr.aria-label]="rowLabel(row)"
+                >
+                  <span class="catalogue-card-cover catalogue-v3-row-cover">
+                    @if (row.coverImageUrl) {
+                      <img [src]="row.coverImageUrl" [alt]="'Couverture de ' + row.title" />
+                    } @else {
+                      <span
+                        class="cover-fallback catalogue-v3-row-cover-fallback"
+                        aria-hidden="true"
+                      ></span>
+                    }
+                  </span>
+
+                  <span class="catalogue-v3-row-main">
+                    <span class="catalogue-v3-row-title" [attr.title]="row.title">
+                      {{ row.title }}
+                      @if (row.subtitle) {
+                        <span class="catalogue-v3-row-subtitle"> — {{ row.subtitle }}</span>
+                      }
+                    </span>
+                    @if (authorsLabel(row); as authors) {
+                      <span
+                        class="catalogue-v3-authors"
+                        [attr.title]="row.authorNames.join(', ')"
+                        >{{ authors }}</span
+                      >
+                    }
+                  </span>
+
+                  <span class="catalogue-v3-row-biblio">
+                    <span class="catalogue-v3-row-meta">
+                      <span class="catalogue-v3-language">{{ languageLabel(row.language) }}</span>
+                      @if (row.publicationYear) {
+                        <span>{{ row.publicationYear }}</span>
+                      }
+                    </span>
+                    @if (row.publisher) {
+                      <span class="catalogue-v3-row-publisher">{{ row.publisher }}</span>
+                    }
+                    @if (row.isbn) {
+                      <span class="catalogue-v3-row-isbn">ISBN {{ row.isbn }}</span>
+                    }
+                  </span>
+
+                  <span
+                    class="catalogue-v3-availability catalogue-v3-row-availability"
+                    [class.catalogue-v3-availability-yes]="row.availableCopies > 0"
+                  >
+                    <i
+                      class="pi"
+                      [class.pi-check-circle]="row.availableCopies > 0"
+                      [class.pi-minus-circle]="row.availableCopies === 0"
+                      aria-hidden="true"
+                    ></i>
+                    {{ availabilityLabel(row) }}
+                  </span>
+
+                  <span class="catalogue-v3-row-link">
+                    Voir la fiche
+                    <i class="pi pi-arrow-right" aria-hidden="true"></i>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+
+        <p-paginator
+          class="catalogue-v3-pagination"
+          [first]="currentFirst()"
+          [rows]="currentRows()"
+          [totalRecords]="totalRecords()"
+          (onPageChange)="onPageChange($event)"
+        />
+      }
+    </div>
+  </div>
+</section>

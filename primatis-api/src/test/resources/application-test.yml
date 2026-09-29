@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: primatis-api
+
+  datasource:
+    # URL fixe et non surchargeable par SPRING_DATASOURCE_URL : les tests
+    # d'intégration ne doivent jamais cibler accidentellement primatis_dev.
+    url: jdbc:postgresql://localhost:5432/primatis_test
+    username: ${SPRING_DATASOURCE_USERNAME:primatis}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      # DEV-16.8 SS12 : le defaut Spring Boot (10) multiplie par le nombre de
+      # contextes Spring distincts crees pendant la suite complete (chaque
+      # @TestPropertySource different = un nouveau HikariPool, jamais ferme
+      # avant la fin du run car tous restent en cache). Mesure reelle avant
+      # correctif : pic ~90 connexions simultanees sur primatis_test,
+      # echec a l'ouverture du 11e pool ("remaining connection slots are
+      # reserved for roles with the SUPERUSER attribute", max_connections
+      # PostgreSQL=100). Aucun test de ce profil "par defaut" n'exige de
+      # connexions reellement simultanees pour sa correctness (les tests de
+      # concurrence qui en ont besoin surchargent deja explicitement cette
+      # valeur via leur propre @TestPropertySource, ex. LoanServiceConcurrencyTests
+      # a 25) — seule la latence d'acquisition augmente legerement ici.
+      maximum-pool-size: 4
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+# Infrastructure JWT RS256 (DEV-03.7) : issuer/audience/durée seulement.
+# Aucun chemin de clé ici — la paire RSA de test est générée EN MÉMOIRE par
+# JwtTestKeysConfig (src/test/java/be/primatis/config), jamais un fichier.
+# JwtConfig (chargement PEM production) est désactivé sous le profil "test"
+# (@Profile("!test")).
+primatis:
+  security:
+    jwt:
+      issuer: primatis-api
+      audience: primatis-api
+      access-token-ttl: PT1H
+  # DEV-08.7 : neutralise le déclenchement automatique réel du scheduler
+  # d'expiration pendant les tests (aucune suite de tests ne dure une
+  # heure) — la cadence métier décidée (une minute) reste inchangée en
+  # production, seul le défaut applicatif (application.yml absent ici)
+  # s'applique hors du profil "test".
+  reservation:
+    expiration:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000
+  # DEV-10.8 : même neutralisation exacte que ci-dessus, pour les deux
+  # traitements périodiques Loan (due-soon/overdue) — cadence métier par
+  # défaut (une minute) inchangée en production.
+  loan:
+    due-soon:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000
+    overdue:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000

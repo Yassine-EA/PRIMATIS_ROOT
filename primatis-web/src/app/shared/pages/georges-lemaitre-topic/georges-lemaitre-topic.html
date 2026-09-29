@@ -1,0 +1,102 @@
+<nav class="lemaitre-topic-breadcrumb lemaitre-topic-breadcrumb--outside" aria-label="Fil d'Ariane">
+  <a routerLink="/georges-lemaitre">Georges Lemaître</a>
+  <i class="pi pi-chevron-right" aria-hidden="true"></i>
+  <span>{{ topic.title }}</span>
+</nav>
+
+<section class="lemaitre-v3-hero lemaitre-v3-hero--topic">
+  <picture class="lemaitre-v3-hero-background" aria-hidden="true">
+    <source media="(max-width: 767px)" srcset="/assets/public/georges-lemaitre/hero/georges-lemaitre-background-768-mobile.webp" />
+    <source media="(max-width: 1439px)" srcset="/assets/public/georges-lemaitre/hero/georges-lemaitre-background-1280.webp" />
+    <img src="/assets/public/georges-lemaitre/hero/georges-lemaitre-background-1920.webp" alt="" />
+  </picture>
+
+  <div class="lemaitre-v3-hero-inner">
+    <div class="lemaitre-v3-hero-copy lemaitre-topic-shared-hero-copy">
+      <p class="lemaitre-v3-eyebrow">{{ topic.kicker }}</p>
+      <h1>{{ topic.title }}</h1>
+      <p class="lemaitre-v3-hero-subtitle">{{ topic.subtitle }}</p>
+      <div class="lemaitre-v3-hero-actions">
+        <a routerLink="/georges-lemaitre" class="cta cta--primary"><i class="pi pi-arrow-left" aria-hidden="true"></i> Georges Lemaître</a>
+        <a routerLink="/catalogue" class="cta cta--secondary"><i class="pi pi-book" aria-hidden="true"></i> Découvrir le catalogue</a>
+      </div>
+    </div>
+
+    <picture class="lemaitre-v3-portrait-wrap">
+      <source media="(max-width: 767px)" srcset="/assets/public/georges-lemaitre/hero/georges-lemaitre-portrait-480.webp" />
+      <source media="(max-width: 1199px)" srcset="/assets/public/georges-lemaitre/hero/georges-lemaitre-portrait-768.webp" />
+      <img class="lemaitre-hero-portrait" src="/assets/public/georges-lemaitre/hero/georges-lemaitre-portrait-1024.webp" alt="Portrait illustré de Georges Lemaître" />
+    </picture>
+
+    <div class="lemaitre-v3-hero-note" aria-label="Repère du dossier">
+      <i [class]="'pi ' + topic.icon" aria-hidden="true"></i>
+      <span>{{ topic.noteYear }}</span>
+      <strong>{{ topic.noteTitle }}</strong>
+      <p>{{ topic.noteText }}</p>
+    </div>
+    <p class="lemaitre-v3-formula" aria-label="Relation vitesse-distance">v = H<sub>0</sub>&nbsp;d</p>
+  </div>
+</section>
+
+<nav class="lemaitre-route-timeline" aria-label="Parcours chronologique de Georges Lemaître">
+  <div class="lemaitre-route-timeline-inner">
+    <a routerLink="/georges-lemaitre/charleroi" [class.is-active]="topicKey === 'charleroi'">
+      <span>1894</span><strong><i class="pi pi-map-marker" aria-hidden="true"></i>Charleroi</strong><small>Naissance</small>
+    </a>
+    <a routerLink="/georges-lemaitre/parcours" [class.is-active]="topicKey === 'parcours'">
+      <span>1914–1927</span><strong><i class="pi pi-graduation-cap" aria-hidden="true"></i>Formation</strong><small>Guerre, Cambridge, Harvard, MIT</small>
+    </a>
+    <a routerLink="/georges-lemaitre/univers-en-expansion" [class.is-active]="topicKey === 'univers-en-expansion'">
+      <span>1927</span><strong><i class="pi pi-chart-line" aria-hidden="true"></i>Expansion</strong><small>L'Univers en expansion</small>
+    </a>
+    <a routerLink="/georges-lemaitre/atome-primitif" [class.is-active]="topicKey === 'atome-primitif'">
+      <span>1931</span><strong><i class="pi pi-sun" aria-hidden="true"></i>Atome primitif</strong><small>Une origine physique du cosmos</small>
+    </a>
+    <a routerLink="/georges-lemaitre/distinctions" [class.is-active]="topicKey === 'distinctions'">
+      <span>1934</span><strong><i class="pi pi-trophy" aria-hidden="true"></i>Reconnaissance</strong><small>Prix et académies</small>
+    </a>
+    <a [routerLink]="['/georges-lemaitre/distinctions']" fragment="section-4" [class.is-active]="topicKey === 'distinctions'">
+      <span>1966</span><strong><i class="pi pi-star" aria-hidden="true"></i>Héritage</strong><small>Postérité scientifique</small>
+    </a>
+  </div>
+</nav>
+
+<main class="lemaitre-topic-shell">
+  <div class="lemaitre-topic-toolbar">
+    <a class="lemaitre-topic-return" routerLink="/georges-lemaitre">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>Retour à Georges Lemaître</span>
+    </a>
+    <span class="lemaitre-topic-read-label">Dossier thématique</span>
+  </div>
+
+  <div class="lemaitre-topic-layout">
+    <article class="lemaitre-topic-article">
+      @for (section of topic.sections; track section.title; let index = $index) {
+        <section [attr.id]="'section-' + (index + 1)" class="lemaitre-topic-section">
+          <div class="lemaitre-topic-section-marker" aria-hidden="true"><span>{{ index + 1 }}</span></div>
+          <div class="lemaitre-topic-section-content">
+            @if (section.eyebrow) { <p class="lemaitre-topic-eyebrow">{{ section.eyebrow }}</p> }
+            <h2>{{ section.title }}</h2>
+            @for (paragraph of section.paragraphs; track paragraph) { <p>{{ paragraph }}</p> }
+          </div>
+        </section>
+      }
+    </article>
+
+    <aside class="lemaitre-topic-aside" aria-label="Repères du dossier">
+      <div class="lemaitre-topic-aside-heading"><i [class]="'pi ' + topic.icon" aria-hidden="true"></i><h2>Repères</h2></div>
+      <dl>
+        @for (fact of topic.facts; track fact.label) { <div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div> }
+      </dl>
+      <div class="lemaitre-topic-aside-index" aria-label="Sommaire du dossier">
+        <p>Dans ce dossier</p>
+        @for (section of topic.sections; track section.title; let index = $index) {
+          <a [attr.href]="sectionHref(index + 1)" (click)="scrollToSection($event, index + 1)"><span>{{ index + 1 }}</span>{{ section.title }}</a>
+        }
+      </div>
+    </aside>
+  </div>
+
+  <app-georges-lemaitre-topic-footer [sources]="topic.sources" [topicKey]="topicKey" />
+</main>

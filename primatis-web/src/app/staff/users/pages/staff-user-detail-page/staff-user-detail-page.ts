@@ -1,0 +1,157 @@
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TagModule } from 'primeng/tag';
+
+import { AppError } from '../../../../core/errors/api-error';
+import { toAppError } from '../../../../core/errors/api-error.util';
+import { EmptyState } from '../../../../shared/ui/empty-state/empty-state';
+import { ErrorState } from '../../../../shared/ui/error-state/error-state';
+import { LoadingState } from '../../../../shared/ui/loading-state/loading-state';
+import {
+  accountStatusSeverity as sharedAccountStatusSeverity,
+  memberStatusSeverity as sharedMemberStatusSeverity,
+  StatusTagSeverity,
+} from '../../../../shared/status/status-severity';
+import { AccountStatus } from '../../../../user/models/account-status';
+import { MemberStatus } from '../../../../user/models/member-status';
+import { ResidenceResponse } from '../../../../user/models/residence-response';
+import { UserResponse } from '../../../../user/models/user-response';
+import { ResidenceApiService } from '../../../../user/services/residence-api.service';
+import { UserApiService } from '../../../../user/services/user-api.service';
+
+const CURRENT_RESIDENCE_NOT_FOUND_CODE = 'CURRENT_RESIDENCE_NOT_FOUND';
+const INVALID_USER_ID_ERROR: AppError = { message: "Identifiant d'utilisateur invalide.", fieldErrors: [] };
+
+
+@Component({
+  selector: 'app-staff-user-detail-page',
+  imports: [RouterLink, TagModule, LoadingState, EmptyState, ErrorState],
+  templateUrl: './staff-user-detail-page.html',
+  styleUrl: './staff-user-detail-page.scss',
+})
+export class StaffUserDetailPage {
+  private readonly route = inject(ActivatedRoute);
+  private readonly userApiService = inject(UserApiService);
+  private readonly residenceApiService = inject(ResidenceApiService);
+  private readonly titleService = inject(Title);
+
+  readonly user = signal<UserResponse | null>(null);
+  readonly userLoading = signal(false);
+  readonly userError = signal<AppError | null>(null);
+
+  readonly currentResidence = signal<ResidenceResponse | null>(null);
+  readonly residenceLoading = signal(false);
+  readonly residenceError = signal<AppError | null>(null);
+
+  readonly residenceHistory = signal<ResidenceResponse[]>([]);
+  readonly historyLoading = signal(false);
+  readonly historyError = signal<AppError | null>(null);
+
+  constructor() {
+    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const id = parseUserId(params.get('id'));
+      if (id === null) {
+        this.user.set(null);
+        this.userLoading.set(false);
+        this.userError.set(INVALID_USER_ID_ERROR);
+        return;
+      }
+      this.loadUser(id);
+      this.loadCurrentResidence(id);
+      this.loadResidenceHistory(id);
+    });
+  }
+
+  accountStatusSeverity(status: AccountStatus): StatusTagSeverity {
+    return sharedAccountStatusSeverity(status);
+  }
+
+  memberStatusSeverity(status: MemberStatus): StatusTagSeverity {
+    return sharedMemberStatusSeverity(status);
+  }
+
+  
+  accountStatusLabel(status: AccountStatus): string {
+    return status === 'ACTIVE' ? 'Actif' : 'Désactivé';
+  }
+
+  memberStatusLabel(status: MemberStatus): string {
+    switch (status) {
+      case 'ACTIVE':
+        return 'Actif';
+      case 'BLOCKED':
+        return 'Bloqué';
+      case 'EXPIRED':
+        return 'Expiré';
+    }
+  }
+
+  private loadUser(id: number): void {
+    this.userLoading.set(true);
+    this.userError.set(null);
+    this.userApiService.getUser(id).subscribe({
+      next: (value) => {
+        this.user.set(value.user);
+        this.userLoading.set(false);
+        this.titleService.setTitle(`${value.user.firstName} ${value.user.lastName} — PRIMATIS`);
+      },
+      error: (err: unknown) => {
+        this.userLoading.set(false);
+        this.userError.set(toAppError(err));
+      },
+    });
+  }
+
+  private loadCurrentResidence(id: number): void {
+    this.residenceLoading.set(true);
+    this.residenceError.set(null);
+    this.currentResidence.set(null);
+    this.residenceApiService.getResidence(id).subscribe({
+      next: (value) => {
+        this.currentResidence.set(value);
+        this.residenceLoading.set(false);
+      },
+      error: (err: unknown) => {
+        this.residenceLoading.set(false);
+        const appError = toAppError(err);
+        if (appError.code === CURRENT_RESIDENCE_NOT_FOUND_CODE) {
+          
+          // jamais un ErrorState pour ce cas précis.
+          this.currentResidence.set(null);
+          return;
+        }
+        this.residenceError.set(appError);
+      },
+    });
+  }
+
+  private loadResidenceHistory(id: number): void {
+    this.historyLoading.set(true);
+    this.historyError.set(null);
+    this.residenceApiService.getResidenceHistory(id).subscribe({
+      next: (value) => {
+        // Ordre backend conservé tel quel (startDate DESC) — jamais retrié.
+        this.residenceHistory.set(value);
+        this.historyLoading.set(false);
+      },
+      error: (err: unknown) => {
+        this.historyLoading.set(false);
+        this.historyError.set(toAppError(err));
+      },
+    });
+  }
+}
+
+/**
+ * `null` si l'identifiant de route est absent ou n'est pas un entier —
+ * n'appelle alors jamais une API avec `NaN`.
+ */
+function parseUserId(rawId: string | null): number | null {
+  if (rawId === null) {
+    return null;
+  }
+  const id = Number(rawId);
+  return Number.isInteger(id) ? id : null;
+}

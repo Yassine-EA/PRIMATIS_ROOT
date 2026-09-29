@@ -1,0 +1,62 @@
+@use "../../../../shared/styles/breakpoints";
+
+:host { display: block; }
+.admin-user-detail { max-width: 78rem; margin: 0 auto; }
+.admin-detail-hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; margin-bottom: 1.25rem; padding: clamp(1.7rem, 3vw, 2.5rem); border-radius: .75rem; color:#fff; background: linear-gradient(118deg,#082b40 0%,#123d56 68%,#315f76 100%); box-shadow:0 16px 36px rgba(8,43,64,.12); }
+.admin-detail-kicker,.admin-card-kicker { margin:0 0 .35rem; color:#c98a52; font-size:.7rem; font-weight:800; letter-spacing:.13em; }
+.admin-detail-hero h1 { margin:0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(2rem,4vw,3rem); line-height:1.05; }
+.admin-detail-hero p:last-child { margin:.45rem 0 0; color:rgba(255,255,255,.82); }
+.admin-detail-statuses { display:flex; flex-wrap:wrap; gap:.5rem; }
+.admin-detail-layout { display:grid; grid-template-columns:minmax(0,1fr) 20rem; gap:1rem; align-items:start; }
+.admin-detail-main,.admin-detail-aside { display:grid; gap:1rem; }
+.admin-detail-aside { position:sticky; top:1rem; }
+.admin-detail-card { overflow:hidden; border:1px solid #e8e0d4; border-radius:.65rem; background:#fff; box-shadow:0 8px 24px rgba(25,39,47,.055); }
+.admin-card-header { padding:1rem 1.15rem; border-bottom:1px solid #c98148; background:#fffdfa; }
+.admin-card-header.compact { padding:.85rem 1rem; }
+.admin-card-header h2 { margin:0; color:#0a3146; font-family:Georgia,"Times New Roman",serif; font-size:1.25rem; }
+.admin-card-header p:last-child { margin:.25rem 0 0; color:#68747b; font-size:.86rem; }
+.admin-card-kicker { margin-bottom:.1rem; }
+.admin-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem 1.15rem; padding:1.15rem; }
+.field { display:flex; flex-direction:column; gap:.4rem; min-width:0; }
+.field-wide { grid-column:1/-1; }
+.field label { color:#183646; font-weight:700; font-size:.86rem; }
+.field :is(input,p-multiselect) { width:100%; }
+.readonly-field p { margin:0; min-height:2.55rem; display:flex; align-items:center; padding:.55rem .7rem; border-radius:.4rem; background:#f7f4ee; color:#53616b; word-break:break-word; }
+.membership-fields { margin:0 1.15rem 1.15rem; padding:0; border:1px solid #eadfd0; border-radius:.55rem; background:#fcfaf6; }
+.membership-fields legend { margin-left:1rem; padding:0 .45rem; color:#7a4a2d; font-weight:800; font-size:.86rem; }
+.form-actions { display:flex; justify-content:flex-end; padding:1rem 1.15rem; border-top:1px solid #eee7dc; background:#fffdfa; }
+.admin-card-body { padding:1rem; }
+.admin-action-stack { display:flex; flex-direction:column; align-items:flex-start; gap:.8rem; }
+.admin-action-stack > button,.membership-actions button { width:100%; justify-content:center; }
+.membership-actions { display:grid; width:100%; gap:.5rem; }
+.admin-definition-grid { display:grid; grid-template-columns:max-content minmax(0,1fr); gap:.5rem .85rem; margin:0; }
+.admin-definition-grid dt { color:#6d6962; font-weight:700; }
+.admin-definition-grid dd { margin:0; color:#293b45; word-break:break-word; }
+.admin-definition-grid.technical { grid-template-columns:1fr; gap:.15rem; }
+.admin-definition-grid.technical dt { margin-top:.4rem; }
+.admin-definition-grid.technical dd { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.77rem; color:#61707a; }
+.residence-history-list { display:grid; gap:.7rem; margin:0; padding:0; list-style:none; }
+.residence-history-list li { display:flex; justify-content:space-between; gap:1rem; padding:.7rem .8rem; border:1px solid #eee6da; border-radius:.45rem; background:#fcfaf6; }
+.residence-history-list small { flex:0 0 auto; color:#7a736b; }
+.muted-copy,.hint { margin:0; color:#6d7478; font-size:.86rem; line-height:1.45; }
+.dialog-actions { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:flex-end; margin-top:1rem; }
+
+@media (max-width: 1100px) {
+  .admin-detail-layout { grid-template-columns:1fr; }
+  .admin-detail-aside { position:static; grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+@media (max-width: 767px) {
+  .admin-user-detail { max-width:none; }
+  .admin-detail-hero { flex-direction:column; align-items:flex-start; padding:1.5rem 1.1rem; }
+  .admin-detail-layout { gap:.8rem; }
+  .admin-detail-aside { grid-template-columns:1fr; }
+  .admin-form-grid { grid-template-columns:1fr; padding:1rem; }
+  .field-wide { grid-column:auto; }
+  .membership-fields { margin:0 1rem 1rem; }
+  .form-actions { padding:1rem; }
+  .form-actions button { width:100%; justify-content:center; }
+  .admin-definition-grid { grid-template-columns:1fr; gap:.15rem; }
+  .admin-definition-grid dt { margin-top:.45rem; }
+  .residence-history-list li { flex-direction:column; gap:.25rem; }
+}

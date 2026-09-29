@@ -1,0 +1,98 @@
+:host { display: block; }
+
+.article-image-field {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--primatis-ivory-200);
+  border-radius: 14px;
+  background: var(--primatis-ivory-50);
+}
+
+.article-image-field-copy {
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0.2rem 0 0.35rem;
+    color: var(--primatis-navy-900);
+    font-family: var(--primatis-font-editorial);
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--primatis-gray-600);
+    line-height: 1.55;
+  }
+}
+
+.article-image-field-empty {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 6.5rem;
+  padding: 1rem;
+  border: 1px dashed var(--primatis-copper-400);
+  border-radius: 12px;
+  background: #fff;
+
+  > .pi {
+    font-size: 1.6rem;
+    color: var(--primatis-copper-600);
+  }
+
+  div {
+    display: grid;
+    gap: 0.15rem;
+    flex: 1;
+  }
+
+  strong { color: var(--primatis-navy-900); }
+  span { color: var(--primatis-gray-600); font-size: 0.9rem; }
+}
+
+.article-image-field-preview {
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--primatis-navy-950);
+
+  img {
+    display: block;
+    width: 100%;
+    max-height: 28rem;
+    object-fit: contain;
+  }
+}
+
+.article-image-field-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.article-image-field-alt {
+  display: grid;
+  gap: 0.4rem;
+
+  label { font-weight: 600; color: var(--primatis-navy-900); }
+}
+
+.article-image-field-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.article-image-field-uploading {
+  margin: 0.75rem 0 0;
+  color: var(--primatis-gray-600);
+}
+
+@media (max-width: 767px) {
+  .article-image-field { padding: 1rem; }
+  .article-image-field-empty { align-items: flex-start; flex-wrap: wrap; }
+  .article-image-field-empty button { width: 100%; }
+  .article-image-field-controls { grid-template-columns: 1fr; }
+  .article-image-field-actions { width: 100%; }
+  .article-image-field-actions button { flex: 1; }
+}

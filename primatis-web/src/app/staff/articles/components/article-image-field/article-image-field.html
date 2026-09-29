@@ -1,0 +1,89 @@
+<div class="article-image-field" [class.article-image-field--has-image]="imageUrl()">
+  <div class="article-image-field-copy">
+    <span class="staff-page-kicker">Illustration</span>
+    <h3>Image de l’article</h3>
+    <p>Une seule image peut être associée à l’article. Elle sera affichée entre le résumé et le corps.</p>
+  </div>
+
+  <input
+    #fileInput
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    hidden
+    [disabled]="disabled() || uploading()"
+    (change)="onFileSelected($event)"
+  />
+
+  @if (imageUrl(); as currentImageUrl) {
+    <div class="article-image-field-preview">
+      <img [src]="currentImageUrl" [alt]="imageAlt() || 'Aperçu de l’illustration'" />
+    </div>
+
+    <div class="article-image-field-controls">
+      <div class="article-image-field-alt">
+        <label for="article-image-alt">Texte alternatif <span aria-hidden="true">*</span></label>
+        <input
+          pInputText
+          id="article-image-alt"
+          type="text"
+          maxlength="255"
+          [value]="imageAlt() ?? ''"
+          [disabled]="disabled()"
+          placeholder="Décrivez brièvement l’image"
+          (input)="updateAlt($event)"
+        />
+        @if (altInvalid()) {
+          <p-message severity="error" text="Le texte alternatif est requis pour l’image." />
+        }
+      </div>
+
+      @if (!disabled()) {
+        <div class="article-image-field-actions">
+          <button
+            pButton
+            type="button"
+            severity="secondary"
+            icon="pi pi-refresh"
+            label="Remplacer"
+            [disabled]="uploading()"
+            (click)="chooseImage(fileInput)"
+          ></button>
+          <button
+            pButton
+            type="button"
+            severity="danger"
+            icon="pi pi-trash"
+            label="Supprimer"
+            [disabled]="uploading()"
+            (click)="removeImage()"
+          ></button>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="article-image-field-empty">
+      <i class="pi pi-image" aria-hidden="true"></i>
+      <div>
+        <strong>Aucune image</strong>
+        <span>JPEG, PNG ou WebP · 5 Mio maximum</span>
+      </div>
+      @if (!disabled()) {
+        <button
+          pButton
+          type="button"
+          icon="pi pi-upload"
+          label="Ajouter une image"
+          [disabled]="uploading()"
+          (click)="chooseImage(fileInput)"
+        ></button>
+      }
+    </div>
+  }
+
+  @if (uploading()) {
+    <p class="article-image-field-uploading"><i class="pi pi-spin pi-spinner"></i> Envoi de l’image…</p>
+  }
+  @if (uploadError(); as message) {
+    <p-message severity="error" [text]="message" />
+  }
+</div>

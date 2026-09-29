@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: primatis-api
+
+  datasource:
+    # Base dédiée aux tests navigateur E2E afin d'isoler leur exécution
+    # des autres environnements locaux.
+    url: jdbc:postgresql://localhost:5432/primatis_e2e
+    username: ${SPRING_DATASOURCE_USERNAME:primatis}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    # Utilise les mêmes migrations que les autres environnements.
+    locations: classpath:db/migration
+
+# La configuration JWT est héritée de application.yml.
+
+# Les traitements planifiés sont espacés afin d'éviter qu'ils interfèrent
+# avec l'exécution déterministe des scénarios E2E.
+primatis:
+  loan:
+    due-soon:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000
+
+    overdue:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000
+
+  reservation:
+    expiration:
+      fixed-delay-ms: 3600000
+      initial-delay-ms: 3600000
+
+  article-media:
+    # Stockage dédié aux médias générés pendant les tests E2E.
+    storage-path: ${PRIMATIS_ARTICLE_MEDIA_STORAGE_PATH:./public/media/articles-e2e}

@@ -1,0 +1,23 @@
+
+
+$primatis-bp-tablet: 768px;
+$primatis-bp-desktop: 1024px;
+$primatis-bp-wide: 1440px;
+
+@mixin from-tablet {
+  @media (min-width: $primatis-bp-tablet) {
+    @content;
+  }
+}
+
+@mixin from-desktop {
+  @media (min-width: $primatis-bp-desktop) {
+    @content;
+  }
+}
+
+@mixin from-wide {
+  @media (min-width: $primatis-bp-wide) {
+    @content;
+  }
+}

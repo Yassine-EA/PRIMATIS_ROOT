@@ -1,0 +1,172 @@
+<div class="page-shell admin-user-create">
+  <header class="admin-hero">
+    <p class="admin-hero-kicker">ADMINISTRATION · COMPTES</p>
+    <h1 class="admin-hero-title">Créer un utilisateur</h1>
+    <p class="admin-hero-description">Créez un compte et attribuez les accès nécessaires. Le mot de passe initial sera généré automatiquement.</p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="admin-create-form">
+    @if (errorMessage(); as message) {
+      <p-message severity="error" [text]="message" styleClass="form-banner-error" />
+    }
+
+    <section class="admin-form-card" aria-labelledby="account-heading">
+      <div class="admin-section-header">
+        <span class="admin-section-index">1</span>
+        <div>
+          <p class="admin-section-kicker">COMPTE</p>
+          <h2 id="account-heading">Informations de connexion</h2>
+          <p>L’adresse e-mail identifie le compte dans PRIMATIS.</p>
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="field field-wide">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input pInputText id="email" type="email" formControlName="email" autocomplete="email" />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <p-message severity="error" text="Email valide requis." />
+          }
+          @if (fieldError('email'); as message) {
+            <p-message severity="error" [text]="message" />
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-form-card" aria-labelledby="identity-heading">
+      <div class="admin-section-header">
+        <span class="admin-section-index">2</span>
+        <div>
+          <p class="admin-section-kicker">IDENTITÉ</p>
+          <h2 id="identity-heading">Informations personnelles</h2>
+          <p>Renseignez les informations utiles à l’identification de l’utilisateur.</p>
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="field">
+          <label for="firstName">Prénom <span aria-hidden="true">*</span></label>
+          <input pInputText id="firstName" formControlName="firstName" autocomplete="given-name" />
+          @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
+            <p-message severity="error" text="Prénom requis." />
+          }
+        </div>
+
+        <div class="field">
+          <label for="lastName">Nom <span aria-hidden="true">*</span></label>
+          <input pInputText id="lastName" formControlName="lastName" autocomplete="family-name" />
+          @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
+            <p-message severity="error" text="Nom requis." />
+          }
+        </div>
+
+        <div class="field field-wide">
+          <label for="phoneNumber">Téléphone</label>
+          <input pInputText id="phoneNumber" formControlName="phoneNumber" autocomplete="tel" />
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-form-card" aria-labelledby="access-heading">
+      <div class="admin-section-header">
+        <span class="admin-section-index">3</span>
+        <div>
+          <p class="admin-section-kicker">ACCÈS</p>
+          <h2 id="access-heading">Rôles et adhésion</h2>
+          <p>Attribuez au moins un rôle. Les champs d’adhésion apparaissent uniquement pour un adhérent.</p>
+        </div>
+      </div>
+
+      <div class="admin-form-grid">
+        <div class="field field-wide">
+          <label for="roles">Rôles <span aria-hidden="true">*</span></label>
+          <p-multiselect
+            inputId="roles"
+            formControlName="roles"
+            [options]="roleOptions"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            scrollHeight="14rem"
+            placeholder="Sélectionner un ou plusieurs rôles"
+            (onChange)="onRolesChange()"
+          />
+          @if (form.controls.roles.invalid && form.controls.roles.touched) {
+            <p-message severity="error" text="Au moins un rôle est requis." />
+          }
+        </div>
+      </div>
+
+      @if (isMember) {
+        <fieldset class="membership-fields">
+          <legend>Adhésion</legend>
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="memberStatus">Statut d'adhésion <span aria-hidden="true">*</span></label>
+              <p-select
+                inputId="memberStatus"
+                formControlName="memberStatus"
+                [options]="memberStatusOptions"
+                optionLabel="label"
+                optionValue="value"
+                appendTo="body"
+              />
+              @if (form.controls.memberStatus.invalid && form.controls.memberStatus.touched) {
+                <p-message severity="error" text="Statut d'adhésion requis." />
+              }
+            </div>
+
+            <div class="field">
+              <label for="registrationDate">Date d'inscription <span aria-hidden="true">*</span></label>
+              <input pInputText id="registrationDate" type="date" formControlName="registrationDate" />
+              @if (form.controls.registrationDate.invalid && form.controls.registrationDate.touched) {
+                <p-message severity="error" text="Date d'inscription requise." />
+              }
+            </div>
+
+            <div class="field">
+              <label for="memberExpirationDate">Date d'expiration</label>
+              <input pInputText id="memberExpirationDate" type="date" formControlName="memberExpirationDate" />
+            </div>
+
+            @if (isBlocked) {
+              <div class="field">
+                <label for="blockedReason">Motif de blocage</label>
+                <input pInputText id="blockedReason" formControlName="blockedReason" />
+              </div>
+            }
+          </div>
+        </fieldset>
+      }
+    </section>
+
+    <footer class="admin-form-actions">
+      <p><span aria-hidden="true">*</span> Champs obligatoires</p>
+      <button pButton type="submit" label="Créer l'utilisateur" icon="pi pi-user-plus" [disabled]="submitting()"></button>
+    </footer>
+  </form>
+
+  @if (createdPassword(); as password) {
+    <p-dialog
+      header="Utilisateur créé"
+      [visible]="true"
+      [modal]="true"
+      [closable]="true"
+      [closeOnEscape]="true"
+      (onHide)="closePasswordDialog()"
+    >
+      <p>
+        Voici le mot de passe initial généré pour ce compte. Il ne sera plus jamais affiché : transmettez-le immédiatement à l'utilisateur.
+      </p>
+      <p class="generated-password" data-testid="generated-password">{{ password }}</p>
+      @if (copyFeedback(); as feedback) {
+        <p-message severity="info" [text]="feedback" />
+      }
+      <div class="dialog-actions">
+        <button pButton type="button" label="Copier le mot de passe" icon="pi pi-copy" (click)="copyPassword()"></button>
+        <button pButton type="button" label="Fermer" severity="secondary" (click)="closePasswordDialog()"></button>
+      </div>
+    </p-dialog>
+  }
+</div>

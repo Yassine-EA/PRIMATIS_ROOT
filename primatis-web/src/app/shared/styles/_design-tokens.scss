@@ -1,0 +1,129 @@
+
+
+@use "breakpoints";
+
+:root {
+  
+  --primatis-navy-900: #082b40;
+  --primatis-navy-800: #0b3650;
+  --primatis-navy-700: #123f5e;
+  --primatis-navy-600: #1a4f72;
+
+  
+  --primatis-copper-700: #8b4b26;
+  --primatis-copper-600: #a65d2e;
+  --primatis-copper-500: #b87333;
+  --primatis-copper-300: #d7a16e;
+
+  /* Couleur de texte accessible sur fond clair (contraste ≥ 4.5:1) — à
+     utiliser pour tout texte/lien/icône cuivre, jamais copper-300/500. */
+  --primatis-copper-text: var(--primatis-copper-700);
+
+  
+  --primatis-accent-50: #fcf4ed;
+  --primatis-accent-100: #f8e5d3;
+  --primatis-accent-200: #eac89e;
+  --primatis-accent-300: var(--primatis-copper-300);
+  --primatis-accent-400: #c3823f;
+  --primatis-accent-500: var(--primatis-copper-500);
+  --primatis-accent-600: var(--primatis-copper-600);
+  --primatis-accent-700: var(--primatis-copper-700);
+  --primatis-accent-800: #58310e;
+  --primatis-accent-900: #3e220a;
+  --primatis-accent-950: #281606;
+  --primatis-accent-text: var(--primatis-copper-text);
+
+  
+  --primatis-ivory-50: #faf9f6;
+  --primatis-ivory-100: #f6f1e8;
+  --primatis-ivory-200: #ece5da;
+
+  
+  --primatis-gray-100: #f1f3f5;
+  --primatis-gray-300: #d7dde3;
+  --primatis-gray-500: #7c8795;
+  --primatis-gray-700: #46515f;
+  --primatis-gray-900: #1f2833;
+
+  
+  --primatis-success: #238b45;
+  --primatis-warning: #c27a15;
+  --primatis-danger: #d64545;
+  --primatis-info: #2f6fed;
+
+  
+  --primatis-font-ui:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  --primatis-font-editorial:
+    "Playfair Display",
+    Georgia,
+    "Times New Roman",
+    ui-serif,
+    serif;
+
+  
+  --primatis-text-hero: 2.25rem; /* 36px mobile */
+  --primatis-text-page-title-public: 1.875rem; /* 30px mobile */
+  --primatis-text-page-title-business: 1.625rem; /* 26px mobile, seuil bas Staff/Admin */
+  --primatis-text-section-title: 1.375rem; /* 22px mobile */
+  --primatis-text-card-title: 1.125rem; /* 18px */
+  --primatis-text-body: 1rem; /* 16px */
+  --primatis-text-small: 0.875rem; /* 14px */
+  --primatis-text-meta: 0.8125rem; /* 13px */
+
+  
+  --primatis-space-4: 0.25rem;
+  --primatis-space-8: 0.5rem;
+  --primatis-space-12: 0.75rem;
+  --primatis-space-16: 1rem;
+  --primatis-space-24: 1.5rem;
+  --primatis-space-32: 2rem;
+  --primatis-space-40: 2.5rem;
+  --primatis-space-48: 3rem;
+  --primatis-space-64: 4rem;
+  --primatis-space-80: 5rem;
+  --primatis-space-96: 6rem;
+
+  
+  --primatis-space-3xs: var(--primatis-space-4);
+  --primatis-space-2xs: var(--primatis-space-8);
+  --primatis-space-xs: var(--primatis-space-12);
+  --primatis-space-sm: var(--primatis-space-16);
+  --primatis-space-md: var(--primatis-space-24);
+  --primatis-space-lg: var(--primatis-space-32);
+  --primatis-space-xl: var(--primatis-space-48);
+  --primatis-space-2xl: var(--primatis-space-64);
+
+  
+  --primatis-radius-sm: 6px;
+  --primatis-radius-md: 10px;
+  --primatis-radius-lg: 16px;
+  --primatis-radius-xl: 22px;
+
+  
+  --primatis-shadow-sm: 0 1px 2px rgba(6, 12, 19, 0.08);
+  --primatis-shadow-md: 0 4px 10px -2px rgba(6, 12, 19, 0.12);
+
+  
+  --primatis-content-max-width: 75rem; /* 1200px — resserré Member/Staff */
+  --primatis-public-max-width: 90rem; 
+  --primatis-editorial-max-width: 42rem;
+  --primatis-content-padding-desktop: var(--primatis-space-lg);
+  --primatis-content-padding-tablet: var(--primatis-space-md);
+  --primatis-content-padding-mobile: var(--primatis-space-sm);
+  --primatis-page-section-gap: var(--primatis-space-lg);
+}
+
+@media (min-width: breakpoints.$primatis-bp-desktop) {
+  :root {
+    --primatis-text-hero: 4rem; /* 64px desktop, cible 56-72px */
+    --primatis-text-page-title-public: 3rem; /* 48px desktop, cible 44-56px */
+    --primatis-text-page-title-business: 2.25rem; /* 36px desktop, cible 34-42px */
+    --primatis-text-section-title: 2rem; /* 32px desktop, cible 28-36px */
+  }
+}
